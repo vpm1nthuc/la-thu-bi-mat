@@ -4,9 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#fff3ed">
-  <meta name="description" content="Một lời rủ đi ăn cuối tuần thật dễ thương.">
-  <title>Đi ăn với em nha? ♡</title>
-  <link rel="preload" as="image" href="./images/date-cats.png">
+  <meta name="description" content="Một lời mời nho nhỏ cho cuối tuần.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Lời mời cuối tuần">
+  <meta property="og:description" content="Một lời mời nho nhỏ cho cuối tuần.">
+  <meta property="og:url" content="https://vpm1nthuc.github.io/loi-moi-cuoi-tuan/">
+  <meta property="og:image" content="https://vpm1nthuc.github.io/loi-moi-cuoi-tuan/images/share-preview.png">
+  <meta property="og:image:alt" content="Hai người đi dạo trong công viên vào cuối tuần">
+  <title>Lời mời cuối tuần</title>
+  <link rel="preload" as="image" href="./images/weekend-walk.png">
   <style>
     :root { color-scheme: light; --ink: #6b3f47; --pink: #e96f91; --cream: #fffaf4; }
     * { box-sizing: border-box; }
@@ -45,7 +51,7 @@
       background: radial-gradient(circle at 50% 43%, #fff8ed 0 34%, transparent 65%), linear-gradient(155deg, #ffe1dc, #ffeecf);
     }
     .art::before { content: ""; position: absolute; width: 78%; aspect-ratio: 1; border: 2px dashed rgba(224, 133, 137, .44); border-radius: 50%; transform: rotate(-13deg); }
-    .art img { position: relative; display: block; width: 112%; max-width: none; height: auto; filter: drop-shadow(0 14px 20px rgba(136, 74, 72, .12)); animation: bob 4s ease-in-out infinite; }
+    .art img { position: relative; display: block; width: auto; max-width: 100%; height: 98%; object-fit: contain; filter: drop-shadow(0 14px 20px rgba(136, 74, 72, .12)); animation: bob 4s ease-in-out infinite; }
     .art-note {
       position: absolute; right: 18px; bottom: 20px; padding: 10px 15px;
       border: 1px solid #f3c2c3; border-radius: 999px; background: #fffaf2; color: #a35465;
@@ -93,7 +99,7 @@
       .page { padding: 18px 12px; }
       .invite { grid-template-columns: 1fr; width: min(100%, 500px); padding: 12px; border-radius: 28px; }
       .art { min-height: 0; height: clamp(210px, 58vw, 310px); border-radius: 20px; }
-      .art img { width: min(104%, 390px); }
+      .art img { height: 100%; }
       .art-note { right: 10px; bottom: 10px; font-size: 11px; }
       .content { padding: 24px 14px 4px; }
       .eyebrow { margin-bottom: 12px; }
@@ -120,17 +126,17 @@
     <span class="sparkle four" aria-hidden="true">♡</span>
     <section class="invite" id="invite" aria-labelledby="question">
       <div class="art">
-        <img src="./images/date-cats.png" alt="Hai chú mèo đang vui vẻ ăn mì cùng nhau">
+        <img src="./images/weekend-walk.png" alt="Một bạn nam và một bạn nữ đang đi dạo cuối tuần">
         <span class="art-note" aria-hidden="true">một chiếc hẹn xinh xinh ♡</span>
       </div>
       <div class="content">
         <p class="eyebrow">Lời mời đặc biệt dành cho anh ✦</p>
-        <h1 id="question">Anh có muốn đi ăn với em cuối tuần này khonggggg?</h1>
-        <p class="subtitle" id="subtitle">Có anh đi cùng thì món gì cũng ngon hơn á ♡</p>
+        <h1 id="question">Anh có muốn đi chơi với em cuối tuần này khonggggg?</h1>
+        <p class="subtitle" id="subtitle">Có anh đi cùng thì cuối tuần sẽ vui hơn nhiều á ♡</p>
         <div class="choices" id="choices">
           <button class="choice yes" id="yesButton" type="button">Đi thuii</button>
           <button class="choice no" id="noButton" type="button">Khom đi</button>
-          <p class="hint" id="hint">Chọn một chiếc nút nha ✿</p>
+          <p class="hint" id="hint" role="status" aria-live="polite">Chọn một chiếc nút nha ✿</p>
         </div>
         <p class="success-note" role="status">Vậy mình có một chiếc hẹn rồi nhaa! ♡</p>
       </div>
@@ -144,6 +150,8 @@
       const yesButton = document.getElementById('yesButton');
       const noButton = document.getElementById('noButton');
       const hint = document.getElementById('hint');
+      // Thay mã nhận thư ẩn ở đây nếu bạn muốn chuyển sang một email khác.
+      const NOTIFICATION_ENDPOINT = 'https://formsubmit.co/ajax/REPLACE_WITH_FORM_ID';
       const noPositions = [
         { left: '27%', top: '128px' },
         { left: '73%', top: '150px' },
@@ -152,12 +160,13 @@
       ];
       const hints = [
         'Nút này hơi nhút nhát á…',
-        'Hay mình đi ăn nha? ♡',
-        'Em biết quán ngon lắm luôn ✿',
+        'Hay mình đi chơi nha? ♡',
+        'Em biết vài chỗ xinh lắm luôn ✿',
         'Một chiếc hẹn cuối tuần thôi màaa',
         'Chỉ còn một lựa chọn xinh xinh ♡',
       ];
       let noClicks = 0;
+      let sending = false;
       noButton.addEventListener('click', () => {
         noClicks += 1;
         yesButton.style.left = '50%';
@@ -175,11 +184,46 @@
         noButton.style.left = next.left;
         noButton.style.top = next.top;
       });
-      yesButton.addEventListener('click', () => {
-        if (invite.classList.contains('success')) return;
+      yesButton.addEventListener('click', async () => {
+        if (invite.classList.contains('success') || sending) return;
+        sending = true;
+        yesButton.disabled = true;
+        yesButton.textContent = 'Đang gửi...';
+        hint.textContent = 'Đang gửi câu trả lời của anh ♡';
+
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 12000);
+        try {
+          const response = await fetch(NOTIFICATION_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify({
+              _subject: 'Lời mời cuối tuần: đã chọn Đi thuii',
+              _captcha: 'false',
+              _template: 'table',
+              answer: 'Đi thuii',
+              answered_at: new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }),
+              page: window.location.href,
+            }),
+            signal: controller.signal,
+          });
+          const result = await response.json();
+          if (!response.ok || result.success === false || result.success === 'false') {
+            throw new Error('Notification failed');
+          }
+        } catch (error) {
+          yesButton.disabled = false;
+          yesButton.textContent = 'Đi thuii';
+          hint.textContent = 'Mạng hơi chậm, anh bấm lại giúp em nha ♡';
+          sending = false;
+          return;
+        } finally {
+          clearTimeout(timeout);
+        }
+
         const rect = yesButton.getBoundingClientRect();
         invite.classList.add('success');
-        question.textContent = 'Yayyy, cuối tuần mình đi ăn nha!';
+        question.textContent = 'Yayyy, cuối tuần mình đi chơi nha!';
         subtitle.textContent = 'Em mong tới buổi hẹn với anh lắm đó ♡';
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
         const centerX = rect.left + rect.width / 2;
