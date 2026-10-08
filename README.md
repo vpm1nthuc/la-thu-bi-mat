@@ -4,10 +4,11 @@ Trang web nhỏ để rủ anh đi chơi cuối tuần. Mở `index.html` trong 
 
 ## Cách hoạt động
 
-- **Đi thuii**: hiện lời xác nhận và hiệu ứng trái tim.
+- **Đi thuii**: mở chiếc vé hẹn bất ngờ và hiện hiệu ứng trái tim.
 - Khi bấm **Đi thuii**, trang gửi email thông báo qua FormSubmit trước khi hiện lời xác nhận. Nếu gửi lỗi, người xem có thể bấm lại.
 - **Khom đi**: sau mỗi lần bấm, nút đổi vị trí và nút **Đi thuii** lớn dần. Sau lần bấm thứ năm, **Khom đi** biến mất.
 - Giao diện tự điều chỉnh cho điện thoại và tôn trọng cài đặt giảm chuyển động.
+- Hình minh họa đứng yên để trang dễ nhìn hơn.
 
 ## Tùy chỉnh
 
