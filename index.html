@@ -1,160 +1,205 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="A cute Valentine's Day page to ask someone to be your Valentine!">
-  <meta name="theme-color" content="#ffd0e5">
-  <title>Valentine's Day</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fff3ed">
+  <meta name="description" content="Một lời rủ đi ăn cuối tuần thật dễ thương.">
+  <title>Đi ăn với em nha? ♡</title>
+  <link rel="preload" as="image" href="./images/date-cats.png">
   <style>
-    .gradient-background {
-      background: linear-gradient(180deg, #ffd0e5 0%, #ffe8f2 36%, #ffffff 100%);
-      min-height: 100vh;
+    :root { color-scheme: light; --ink: #6b3f47; --pink: #e96f91; --cream: #fffaf4; }
+    * { box-sizing: border-box; }
+    body {
+      min-width: 280px; min-height: 100dvh; margin: 0; color: var(--ink);
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      background: radial-gradient(circle at 8% 17%, #ffe0e2 0 9%, transparent 29%),
+        radial-gradient(circle at 94% 84%, #ffdfc7 0 8%, transparent 28%), #fff3ed;
     }
-
-    .bounce {
-      animation: bounce 2s ease infinite;
+    body::before {
+      content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .35;
+      background-image: radial-gradient(#e9a2a8 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(135deg, #000, transparent 55%, #000);
     }
-
-    @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0);
-      }
-      40% {
-        transform: translateY(-20px);
-      }
-      60% {
-        transform: translateY(-10px);
-      }
+    button { font: inherit; }
+    .page { position: relative; display: grid; place-items: center; min-height: 100dvh; padding: 28px 20px; overflow: hidden; }
+    .sparkle { position: absolute; z-index: 0; color: #ef9aab; font-family: Georgia, serif; line-height: 1; pointer-events: none; animation: float 5s ease-in-out infinite; }
+    .sparkle.one { top: 9%; left: 8%; font-size: 41px; transform: rotate(-18deg); }
+    .sparkle.two { top: 17%; right: 8%; font-size: 30px; animation-delay: -2s; }
+    .sparkle.three { bottom: 12%; left: 6%; font-size: 32px; animation-delay: -3s; }
+    .sparkle.four { bottom: 7%; right: 10%; font-size: 43px; animation-delay: -1s; }
+    .invite {
+      position: relative; z-index: 1; display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+      width: min(100%, 980px); min-height: 570px; padding: 24px;
+      border: 1px solid #f5d8d6; border-radius: 36px; background: var(--cream);
+      box-shadow: 0 24px 70px rgba(148, 80, 91, .14), 0 6px 18px rgba(148, 80, 91, .07);
+    }
+    .invite::before, .invite::after { content: "✦"; position: absolute; z-index: 2; color: #e79aaa; font-size: 23px; pointer-events: none; }
+    .invite::before { top: 19px; left: 23px; }
+    .invite::after { right: 23px; bottom: 16px; }
+    .art {
+      position: relative; display: grid; place-items: center; min-height: 520px; overflow: hidden;
+      border-radius: 27px;
+      background: radial-gradient(circle at 50% 43%, #fff8ed 0 34%, transparent 65%), linear-gradient(155deg, #ffe1dc, #ffeecf);
+    }
+    .art::before { content: ""; position: absolute; width: 78%; aspect-ratio: 1; border: 2px dashed rgba(224, 133, 137, .44); border-radius: 50%; transform: rotate(-13deg); }
+    .art img { position: relative; display: block; width: 112%; max-width: none; height: auto; filter: drop-shadow(0 14px 20px rgba(136, 74, 72, .12)); animation: bob 4s ease-in-out infinite; }
+    .art-note {
+      position: absolute; right: 18px; bottom: 20px; padding: 10px 15px;
+      border: 1px solid #f3c2c3; border-radius: 999px; background: #fffaf2; color: #a35465;
+      font-size: 13px; font-weight: 700; letter-spacing: .02em; transform: rotate(5deg);
+      box-shadow: 0 5px 12px rgba(145, 74, 76, .09);
+    }
+    .content { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 0; padding: 30px clamp(20px, 4vw, 44px) 10px; text-align: center; }
+    .eyebrow { margin: 0 0 15px; color: #bb7284; font-size: 12px; font-weight: 800; letter-spacing: .17em; text-transform: uppercase; }
+    h1 { max-width: 470px; margin: 0; color: #8c435c; font-family: Georgia, "Times New Roman", serif; font-size: clamp(31px, 4vw, 48px); font-weight: 700; line-height: 1.18; text-wrap: balance; }
+    .subtitle { max-width: 330px; margin: 16px 0 0; color: #9f7479; font-size: 15px; line-height: 1.6; }
+    .choices { position: relative; width: min(100%, 390px); height: 242px; margin-top: 8px; }
+    .choice {
+      position: absolute; display: inline-grid; place-items: center; border: 0; border-radius: 999px;
+      cursor: pointer; white-space: nowrap;
+      transition: left .38s cubic-bezier(.22, 1, .36, 1), top .38s cubic-bezier(.22, 1, .36, 1), width .3s ease, height .3s ease, font-size .3s ease, transform .22s ease, opacity .25s ease;
+    }
+    .choice:focus-visible { outline: 3px solid #a35a73; outline-offset: 4px; }
+    .yes {
+      top: 25px; left: 30%; width: min(var(--yes-width, 136px), calc(100% - 12px));
+      height: var(--yes-height, 56px); padding: 0 17px; transform: translateX(-50%);
+      background: var(--pink); color: #fff; font-size: var(--yes-font, 18px); font-weight: 800;
+      box-shadow: 0 8px 0 #c94d72, 0 14px 25px rgba(212, 83, 121, .23);
+    }
+    .yes:hover { transform: translateX(-50%) translateY(-3px); }
+    .yes:active { transform: translateX(-50%) translateY(4px); box-shadow: 0 3px 0 #c94d72; }
+    .no {
+      top: 29px; left: 76%; width: 104px; height: 52px; transform: translateX(-50%);
+      border: 2px solid #e7aeb4; background: #fffdf8; color: #a76072;
+      font-size: 16px; font-weight: 700; box-shadow: 0 6px 13px rgba(145, 74, 76, .08);
+    }
+    .no:hover { background: #fff1f2; }
+    .no.is-gone { opacity: 0; pointer-events: none; transform: translateX(-50%) scale(.5); }
+    .hint { position: absolute; right: 0; bottom: 14px; left: 0; margin: 0; color: #b68a91; font-size: 13px; }
+    .success .art img { animation: happy-bob 1.6s ease-in-out infinite; }
+    .success .subtitle { color: #9a6071; }
+    .success .choices { display: none; }
+    .success-note { display: none; margin-top: 28px; padding: 15px 21px; border-radius: 18px; background: #ffe4e8; color: #a64c69; font-weight: 800; line-height: 1.5; }
+    .success .success-note { display: block; }
+    .heart-burst { position: fixed; z-index: 5; pointer-events: none; font-size: var(--size); animation: burst 1.1s ease-out forwards; }
+    @keyframes float { 50% { translate: 0 -13px; } }
+    @keyframes bob { 50% { transform: translateY(-8px) rotate(1deg); } }
+    @keyframes happy-bob { 50% { transform: translateY(-13px) rotate(-2deg); } }
+    @keyframes burst { to { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(var(--spin)) scale(.5); } }
+    @media (max-width: 760px) {
+      .page { padding: 18px 12px; }
+      .invite { grid-template-columns: 1fr; width: min(100%, 500px); padding: 12px; border-radius: 28px; }
+      .art { min-height: 0; height: clamp(210px, 58vw, 310px); border-radius: 20px; }
+      .art img { width: min(104%, 390px); }
+      .art-note { right: 10px; bottom: 10px; font-size: 11px; }
+      .content { padding: 24px 14px 4px; }
+      .eyebrow { margin-bottom: 12px; }
+      h1 { font-size: clamp(28px, 8vw, 38px); }
+      .subtitle { margin-top: 11px; font-size: 14px; }
+      .choices { margin-top: 4px; height: 235px; }
+      .hint { bottom: 4px; }
+      .sparkle.one, .sparkle.three { display: none; }
+    }
+    @media (max-width: 350px) {
+      .yes { left: 50%; }
+      .no { top: 125px; left: 50%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
     }
   </style>
-  <!-- Preload images so transitions feel instant -->
-  <link rel="preload" as="image" href="./images/image1.gif">
-  <link rel="preload" as="image" href="./images/image2.gif">
-  <link rel="preload" as="image" href="./images/image3.gif">
-  <link rel="preload" as="image" href="./images/image4.gif">
-  <link rel="preload" as="image" href="./images/image5.gif">
-  <link rel="preload" as="image" href="./images/image6.gif">
-  <link rel="preload" as="image" href="./images/image7.gif">
 </head>
-<body class="gradient-background">
-  <main class="flex items-center justify-center h-screen">
-    <section class="flex flex-col items-center p-4">
-      <img
-        id="imageDisplay"
-        src="./images/image1.gif"
-        alt="Cute kitten with flowers"
-        class="rounded-md h-[300px] object-cover"
-      />
-      <h1 id="valentineQuestion" class="text-4xl font-bold italic text-[#bd1e59] my-4">
-        Will you be my Valentine?
-      </h1>
-      <div id="responseButtons" class="flex gap-4 pt-5 items-center">
-        <button
-          id="yesButton"
-          class="bounce inline-flex items-center justify-center whitespace-nowrap rounded-md text-xl font-medium cursor-pointer px-4 py-2 bg-green-500 text-white transition-all duration-300 ease-in-out hover:bg-green-400 min-h-12 min-w-[75px]"
-        >
-          Yes
-        </button>
-        <button
-          id="noButton"
-          class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-xl font-medium cursor-pointer px-4 py-2 bg-red-500 text-white transition-colors hover:bg-red-700 h-12 min-w-[75px]"
-        >
-          No
-        </button>
+<body>
+  <main class="page">
+    <span class="sparkle one" aria-hidden="true">♡</span>
+    <span class="sparkle two" aria-hidden="true">✦</span>
+    <span class="sparkle three" aria-hidden="true">✿</span>
+    <span class="sparkle four" aria-hidden="true">♡</span>
+    <section class="invite" id="invite" aria-labelledby="question">
+      <div class="art">
+        <img src="./images/date-cats.png" alt="Hai chú mèo đang vui vẻ ăn mì cùng nhau">
+        <span class="art-note" aria-hidden="true">một chiếc hẹn xinh xinh ♡</span>
+      </div>
+      <div class="content">
+        <p class="eyebrow">Lời mời đặc biệt dành cho anh ✦</p>
+        <h1 id="question">Anh có muốn đi ăn với em cuối tuần này khonggggg?</h1>
+        <p class="subtitle" id="subtitle">Có anh đi cùng thì món gì cũng ngon hơn á ♡</p>
+        <div class="choices" id="choices">
+          <button class="choice yes" id="yesButton" type="button">Đi thuii</button>
+          <button class="choice no" id="noButton" type="button">Khom đi</button>
+          <p class="hint" id="hint">Chọn một chiếc nút nha ✿</p>
+        </div>
+        <p class="success-note" role="status">Vậy mình có một chiếc hẹn rồi nhaa! ♡</p>
       </div>
     </section>
   </main>
-
   <script>
     (() => {
-      // DOM references
+      const invite = document.getElementById('invite');
+      const question = document.getElementById('question');
+      const subtitle = document.getElementById('subtitle');
       const yesButton = document.getElementById('yesButton');
       const noButton = document.getElementById('noButton');
-      const imageDisplay = document.getElementById('imageDisplay');
-      const valentineQuestion = document.getElementById('valentineQuestion');
-      const responseButtons = document.getElementById('responseButtons');
-
-      // Configuration
-      const GROWTH_PER_CLICK = 35;
-      const FONT_GROWTH_PER_CLICK = 25;
-      const MAX_NO_CLICKS = 5;
-
-      const IMAGE_PATHS = [
-        './images/image1.gif',
-        './images/image2.gif',
-        './images/image3.gif',
-        './images/image4.gif',
-        './images/image5.gif',
-        './images/image6.gif',
-        './images/image7.gif',
+      const hint = document.getElementById('hint');
+      const noPositions = [
+        { left: '27%', top: '128px' },
+        { left: '73%', top: '150px' },
+        { left: '30%', top: '130px' },
+        { left: '70%', top: '154px' },
       ];
-
-      const NO_BUTTON_MESSAGES = [
-        'No',
-        'Are you sure?',
-        'Pookie please',
-        "Don't do this to me :(",
-        "You're breaking my heart",
-        "I'm gonna cry...",
+      const hints = [
+        'Nút này hơi nhút nhát á…',
+        'Hay mình đi ăn nha? ♡',
+        'Em biết quán ngon lắm luôn ✿',
+        'Một chiếc hẹn cuối tuần thôi màaa',
+        'Chỉ còn một lựa chọn xinh xinh ♡',
       ];
-
-      const ALT_TEXTS = [
-        'Cute kitten with flowers',
-        'Sad kitten looking up',
-        'Kitten begging',
-        'Heartbroken kitten',
-        'Crying kitten',
-        'Devastated kitten',
-        'Happy kitten celebrating',
-      ];
-
-      // State
-      let noClickCount = 0;
-      let buttonHeight = 48;
-      let buttonWidth = 80;
-      let fontSize = 20;
-
+      let noClicks = 0;
       noButton.addEventListener('click', () => {
-        if (noClickCount >= MAX_NO_CLICKS) return;
-
-        noClickCount++;
-
-        // Update image and alt text
-        imageDisplay.src = IMAGE_PATHS[noClickCount];
-        imageDisplay.alt = ALT_TEXTS[noClickCount];
-
-        // Grow the "Yes" button to make it harder to ignore
-        buttonHeight += GROWTH_PER_CLICK;
-        buttonWidth += GROWTH_PER_CLICK;
-        fontSize += FONT_GROWTH_PER_CLICK;
-
-        yesButton.style.height = `${buttonHeight}px`;
-        yesButton.style.width = `${buttonWidth}px`;
-        yesButton.style.fontSize = `${fontSize}px`;
-
-        // Update "No" button text with increasingly desperate messages
-        noButton.textContent = NO_BUTTON_MESSAGES[noClickCount];
+        noClicks += 1;
+        yesButton.style.left = '50%';
+        yesButton.style.setProperty('--yes-width', `${136 + noClicks * 29}px`);
+        yesButton.style.setProperty('--yes-height', `${56 + noClicks * 8}px`);
+        yesButton.style.setProperty('--yes-font', `${18 + noClicks * 2}px`);
+        hint.textContent = hints[noClicks - 1];
+        if (noClicks >= 5) {
+          noButton.classList.add('is-gone');
+          noButton.disabled = true;
+          noButton.setAttribute('aria-hidden', 'true');
+          return;
+        }
+        const next = noPositions[noClicks - 1];
+        noButton.style.left = next.left;
+        noButton.style.top = next.top;
       });
-
       yesButton.addEventListener('click', () => {
-        imageDisplay.src = IMAGE_PATHS[IMAGE_PATHS.length - 1];
-        imageDisplay.alt = ALT_TEXTS[ALT_TEXTS.length - 1];
-        valentineQuestion.textContent = 'Yayyy!! :3';
-        responseButtons.style.display = 'none';
-
-        // Heart-shaped confetti for a valentine theme
-        const heart = confetti.shapeFromPath({
-          path: 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z',
-        });
-
-        const defaults = { spread: 360, ticks: 100, gravity: 0, decay: 0.94, startVelocity: 20, shapes: [heart], colors: ['#ff69b4', '#ff1493', '#ff6b81', '#e84393'] };
-
-        confetti({ ...defaults, particleCount: 50, scalar: 2 });
-        confetti({ ...defaults, particleCount: 25, scalar: 3 });
-        confetti({ ...defaults, particleCount: 10, scalar: 4 });
+        if (invite.classList.contains('success')) return;
+        const rect = yesButton.getBoundingClientRect();
+        invite.classList.add('success');
+        question.textContent = 'Yayyy, cuối tuần mình đi ăn nha!';
+        subtitle.textContent = 'Em mong tới buổi hẹn với anh lắm đó ♡';
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        for (let i = 0; i < 22; i += 1) {
+          const heart = document.createElement('span');
+          const angle = (Math.PI * 2 * i) / 22;
+          const distance = 75 + Math.random() * 165;
+          heart.className = 'heart-burst';
+          heart.textContent = i % 3 === 0 ? '✦' : '♥';
+          heart.style.left = `${centerX}px`;
+          heart.style.top = `${centerY}px`;
+          heart.style.color = i % 2 === 0 ? '#e96f91' : '#e8ae68';
+          heart.style.setProperty('--size', `${17 + Math.random() * 15}px`);
+          heart.style.setProperty('--dx', `${Math.cos(angle) * distance}px`);
+          heart.style.setProperty('--dy', `${Math.sin(angle) * distance - 65}px`);
+          heart.style.setProperty('--spin', `${Math.random() * 540 - 270}deg`);
+          document.body.appendChild(heart);
+          heart.addEventListener('animationend', () => heart.remove(), { once: true });
+        }
       });
     })();
   </script>
