@@ -4,14 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#fff3ed">
-  <meta name="description" content="Một lời mời nho nhỏ cho cuối tuần.">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Lời mời cuối tuần">
-  <meta property="og:description" content="Một lời mời nho nhỏ cho cuối tuần.">
-  <meta property="og:url" content="https://vpm1nthuc.github.io/loi-moi-cuoi-tuan/">
-  <meta property="og:image" content="https://vpm1nthuc.github.io/loi-moi-cuoi-tuan/images/share-preview.png">
-  <meta property="og:image:alt" content="Hai người đi dạo trong công viên vào cuối tuần">
-  <title>Lời mời cuối tuần</title>
+  <title>Lá thư bí mật</title>
   <link rel="preload" as="image" href="./images/weekend-walk.png">
   <style>
     :root { color-scheme: light; --ink: #6b3f47; --pink: #e96f91; --cream: #fffaf4; }
@@ -162,12 +155,12 @@
         <span class="art-note" aria-hidden="true">một chiếc hẹn xinh xinh ♡</span>
       </div>
       <div class="content">
-        <p class="eyebrow">Lời mời đặc biệt dành cho anh ✦</p>
+        <p class="eyebrow">Một lá thư nhỏ dành cho anh ✦</p>
         <h1 id="question">Anh có muốn đi chơi với em cuối tuần này khonggggg?</h1>
         <p class="subtitle" id="subtitle">Có anh đi cùng thì cuối tuần sẽ vui hơn nhiều á ♡</p>
         <div class="choices" id="choices">
-          <button class="choice yes" id="yesButton" type="button">Đi thuii</button>
-          <button class="choice no" id="noButton" type="button">Khom đi</button>
+          <button class="choice yes" id="yesButton" type="button">Uki luông</button>
+          <button class="choice no" id="noButton" type="button">Bận gòi</button>
           <p class="hint" id="hint" role="status" aria-live="polite">Chọn một chiếc nút nha ✿</p>
         </div>
         <p class="success-note" role="status">Vậy mình có một chiếc hẹn rồi nhaa! ♡</p>
@@ -246,10 +239,10 @@
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
             body: JSON.stringify({
-              _subject: 'Lời mời cuối tuần: đã chọn Đi thuii',
+              _subject: 'Lá thư bí mật: anh đã chọn Uki luông',
               _captcha: 'false',
               _template: 'table',
-              answer: 'Đi thuii',
+              answer: 'Uki luông',
               answered_at: new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }),
               page: window.location.href,
             }),
@@ -261,7 +254,7 @@
           }
         } catch (error) {
           yesButton.disabled = false;
-          yesButton.textContent = 'Đi thuii';
+          yesButton.textContent = 'Uki luông';
           hint.textContent = 'Mạng hơi chậm, anh bấm lại giúp em nha ♡';
           sending = false;
           return;
